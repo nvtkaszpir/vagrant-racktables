@@ -1,0 +1,6 @@
+---
+
+- name: Rsync racktables directory to server
+  synchronize:
+    src: "{{ racktables_rsync_src }}"
+    dest: "{{ racktables_install_dir }}"

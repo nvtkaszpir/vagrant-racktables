@@ -455,6 +455,10 @@ function init_database_dynamic ()
 			"VALUES (1,'admin','${hash}','RackTables Administrator')";
 		$result = $dbxlink->exec ($query);
 		echo "Administrator password has been set successfully.<br>";
+		error_log( 'E: install, init_database_dynamic, _REQUEST: ' . print_r( $_REQUEST, true ) );
+		error_log( 'E: install, init_database_dynamic, _password: ' . print_r( $_REQUEST['password'], true ) );
+		error_log( 'E: install, init_database_dynamic, _sha1: ' . print_r( $hash, true ) );
+		error_log( 'E: install, init_database_dynamic, _query: ' . print_r( $query, true ) );
 		return TRUE;
 	}
 }

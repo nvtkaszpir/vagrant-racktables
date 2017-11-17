@@ -1,0 +1,14 @@
+---
+# instal useful packages
+
+- name: Install packages which are useful during development
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - mc
+    - htop
+    - dstat
+    - multitail
+    - jq
+

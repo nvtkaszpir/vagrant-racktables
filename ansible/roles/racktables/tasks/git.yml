@@ -1,0 +1,21 @@
+---
+
+- name: Check if git repo exists
+  stat:
+    path: '{{ racktables_git_dest }}/.git'
+  register: git_repo
+
+# This effectively means we must run installer again
+- name: Wipe destination directory becasue it is not git repo
+  file:
+    state: absent
+    dest: '{{ racktables_install_dir }}'
+  when:
+    - not git_repo.stat.exists
+
+- name: Check out git repo
+  git:
+    version: '{{ racktables_git_version }}'
+    repo: '{{ racktables_git_repo }}'
+    dest: '{{ racktables_git_dest }}'
+    force: '{{ racktables_git_force }}'

@@ -1,3 +1,7 @@
 .vagrant/*
 ansible.log
 .galaxy/
+*.sublime-*
+
+# here you can check out repo or whatever, then use racktables_install_method 'rsync'
+racktables/

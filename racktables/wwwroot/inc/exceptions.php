@@ -120,6 +120,8 @@ class RackTablesError extends Exception
 	}
 	public function dispatch()
 	{
+		error_log( 'E: '. $this->code.', msg: '.$this->message. ', _SERVER: ' . print_r( $_SERVER, true ) );
+		error_log( 'E: '. $this->code.', msg: ' .$this->message. ', _REQUEST: ' . print_r( $_REQUEST, true ) );
 		$msgheader = array
 		(
 			self::MISCONFIGURED => 'Configuration error',

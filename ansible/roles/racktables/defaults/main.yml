@@ -1,0 +1,32 @@
+---
+# change to absent to uninstall
+racktables_state: 'directory'
+racktables_install_dir: '/var/www/racktables'
+racktables_wwwroot_dir: '{{ racktables_install_dir }}/wwwroot/'
+racktables_user: www-data
+racktables_group: www-data
+
+racktables_mysql_host: localhost
+racktables_mysql_db: racktables_db
+racktables_mysql_user: racktables_user
+racktables_mysql_pass: racktables_pass
+
+# install method
+# 'git' - checkout git repo
+# 'archive' - download specific verison
+# 'rsync' -  upload ./racktables directory
+racktables_install_method: 'git'
+
+racktables_git: true
+racktables_git_version: master
+racktables_git_repo: 'https://github.com/RackTables/racktables.git'
+racktables_git_dest: '{{ racktables_install_dir }}'
+racktables_git_force: yes
+
+racktables_archive: true
+racktables_archive_version: '0.21.1'
+racktables_archive_src: 'https://github.com/RackTables/racktables/archive/RackTables-{{ racktables_archive_version }}.tar.gz'
+
+racktables_rsync: true
+racktables_rsync_src: './racktables'
+

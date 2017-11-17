@@ -1,0 +1,10 @@
+---
+# ansible-playbook -i envs/local/simple/simple set-proxy.yml -e "http_proxy=http://192.168.121.1:3128/"
+- hosts: all
+  become: yes
+  vars:
+    http_proxy: "http://192.168.121.1:3128/"
+    https_proxy: "http://192.168.121.1:3128/"
+
+  roles:
+    - roles/local_dev

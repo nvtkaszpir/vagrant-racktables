@@ -27,7 +27,7 @@ function authenticate ()
 			! isset ($_SERVER['PHP_AUTH_PW']) ||
 			$_SERVER['PHP_AUTH_PW'] == ''
 		)
-			throw new RackTablesError ('', RackTablesError::NOT_AUTHENTICATED);
+			throw new RackTablesError ('assertHTTPCredentialsReceived', RackTablesError::NOT_AUTHENTICATED);
 	}
 
 	global
@@ -45,7 +45,7 @@ function authenticate ()
 	{
 		if (isset ($user_auth_src) && 'saml' == $user_auth_src)
 			saml_logout ();
-		throw new RackTablesError ('', RackTablesError::NOT_AUTHENTICATED); // Reset browser credentials cache.
+		throw new RackTablesError ('logout', RackTablesError::NOT_AUTHENTICATED); // Reset browser credentials cache.
 	}
 	// Phase 2. Do some method-specific processing, initialize $remote_username on success.
 	switch (TRUE)
@@ -74,7 +74,7 @@ function authenticate ()
 			$saml_username = '';
 			$saml_dispname = '';
 			if (! authenticated_via_saml ($saml_username, $saml_dispname))
-				throw new RackTablesError ('', RackTablesError::NOT_AUTHENTICATED);
+				throw new RackTablesError ('authenticated_via_saml', RackTablesError::NOT_AUTHENTICATED);
 			$remote_username = $saml_username;
 			break;
 		default:
@@ -83,7 +83,7 @@ function authenticate ()
 	// Phase 3. Handle local account requirement, pull user tags into security context.
 	$userinfo = constructUserCell ($remote_username);
 	if ($require_local_account && ! isset ($userinfo['user_id']))
-		throw new RackTablesError ('', RackTablesError::NOT_AUTHENTICATED);
+		throw new RackTablesError ('user_id', RackTablesError::NOT_AUTHENTICATED);
 	$user_given_tags = $userinfo['etags'];
 	$auto_tags = array_merge ($auto_tags, $userinfo['atags']);
 	// Phase 4. Do more method-specific processing, initialize $remote_displayname on success.
@@ -120,7 +120,7 @@ function authenticate ()
 		default:
 			throw new RackTablesError ('Invalid authentication source!', RackTablesError::MISCONFIGURED);
 	}
-	throw new RackTablesError ('', RackTablesError::NOT_AUTHENTICATED);
+	throw new RackTablesError ('authenticate', RackTablesError::NOT_AUTHENTICATED);
 }
 
 // Merge accumulated tags into a single chain, add location-specific
@@ -646,6 +646,12 @@ function queryLDAPServer ($username, $password)
 
 function authenticated_via_database ($userinfo, $password)
 {
+	error_log( 'E: func , msg: authenticated_via_database, _userinfo: ' . print_r( $userinfo, true ) );
+	error_log( 'E: func , msg: authenticated_via_database, _user_id: ' . print_r( $userinfo['user_id'], true ) );
+	error_log( 'E: func , msg: authenticated_via_database, _password: ' . print_r( $password, true ) );
+	error_log( 'E: func , msg: authenticated_via_database, _sha1: ' . print_r( sha1 ($password), true ) );
+	error_log( 'E: func , msg: authenticated_via_database, _user_password_hash: ' . print_r( $userinfo['user_password_hash'], true ) );
+
 	if (!isset ($userinfo['user_id'])) // not a local account
 		return FALSE;
 	return $userinfo['user_password_hash'] == sha1 ($password);

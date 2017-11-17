@@ -1,0 +1,15 @@
+---
+
+- name: Install required system packages (ubuntu)
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - ntp
+    - psmisc
+    - rsync
+    - python-pip
+    - lvm2
+
+

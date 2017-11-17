@@ -1,0 +1,57 @@
+---
+
+- name: Create Install directory
+  file:
+    dest: "{{ racktables_install_dir }}"
+    state: "{{ racktables_state }}"
+    mode: 0755
+    owner: "{{ racktables_user }}"
+    group: "{{ racktables_group }}"
+
+- include: git.yml
+  when:
+    - racktables_install_method == 'git'
+    - racktables_git
+
+- include: archive.yml
+  when:
+    - racktables_install_method == 'archive'
+    - racktables_archive
+
+- include: rsync.yml
+  when:
+    - racktables_install_method == 'rsync'
+    - racktables_rsync
+
+- name: Check if secret.php exists
+  stat:
+    path: "{{ racktables_wwwroot_dir }}/inc/secret.php"
+  register: secret_file
+
+- name: Create empty secret.php file with proper permissions
+  copy:
+    content: ""
+    dest: "{{ racktables_wwwroot_dir }}/inc/secret.php"
+    mode: 0666
+    owner: "{{ racktables_user }}"
+    group: "{{ racktables_group }}"
+  when: not secret_file.stat.exists or secret_file.stat.size == 0 or racktables_reinstall is defined
+
+- name: Fix secret.php file with proper permissions
+  file:
+    dest: "{{ racktables_wwwroot_dir }}/inc/secret.php"
+    mode: 0400
+    owner: "{{ racktables_user }}"
+    group: "{{ racktables_group }}"
+  when: secret_file.stat.exists and secret_file.stat.size != 0 and racktables_reinstall is undefined
+
+- name: Show info about racktables URL - installer mode
+  debug:
+    msg: "Run racktables installer http://{{ ansible_default_ipv4.address }}/index.php?module=installer"
+  when: not secret_file.stat.exists or secret_file.stat.size == 0 or racktables_reinstall is defined
+
+- name: Show info about racktables URL - when already configured
+  debug:
+    msg: "Visit racktables http://{{ ansible_default_ipv4.address }}/"
+  when: secret_file.stat.exists and secret_file.stat.size != 0 and racktables_reinstall is undefined
+

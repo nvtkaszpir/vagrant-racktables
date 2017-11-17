@@ -1,0 +1,6 @@
+---
+racktables_db_user: 'racktables_user'
+racktables_db_pass: 'racktables_pass'
+racktables_db_host: 'localhost'
+racktables_db_name: 'racktables_db'
+racktables_wwwroot_dir: '/var/www/racktables/wwwroot'

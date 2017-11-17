@@ -1,0 +1,86 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - yatesr.timezone
+
+
+- hosts: web
+  become: yes
+  vars:
+    apache_remove_default_vhost: true
+    apache_vhosts:
+      - servername: "racktables.dev.local"
+        documentroot: "{{ racktables_wwwroot_dir }}"
+        extra_parameters: |
+              ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ racktables_wwwroot_dir }}"
+              SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    php_enable_php_fpm: true
+    php_packages_extra:
+      - php7.0-bcmath
+      - php7.0-cli
+      - php7.0-curl
+      - php7.0-gd
+      - php7.0-json
+      - php7.0-ldap
+      - php7.0-mbstring
+      - php7.0-mysql
+      - php7.0-pdo
+      - php7.0-snmp
+      - php7.0-xml
+      - php7.0-xsl
+    php_date_timezone: "Etc/UTC"
+    php_max_execution_time: "600"
+
+  roles:
+    - geerlingguy.apache
+    - geerlingguy.php
+    - geerlingguy.apache-php-fpm
+
+  tasks:
+    - name: Create php log file specific for php fpm
+      copy:
+        content: ""
+        dest: "/var/log/php-fpm.www.log"
+        mode: 0666
+        owner: "www-data"
+        group: "www-data"
+
+    - name: Add logging of fpm of default www pool to specific file
+      lineinfile:
+        dest: "{{ php_fpm_pool_conf_path }}"
+        line: "php_admin_value[error_log] = /var/log/php-fpm.www.log"
+        state: present
+      notify:
+        - restart php-fpm
+
+
+- hosts: db
+  become: yes
+  vars:
+    mysql_databases:
+      - name: '{{ racktables_db_name }}'
+        encoding: utf8
+        collation: utf8_general_ci
+    mysql_users:
+      - name: '{{ racktables_db_user }}'
+        host: '{{ racktables_db_host }}'
+        password: '{{ racktables_db_pass }}'
+        priv: '{{ racktables_db_name }}.*:ALL'
+
+  roles:
+    - role: geerlingguy.mysql
+
+- hosts: app
+  become: yes
+  tasks:
+    - name: Install required packages
+      package:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - git
+        - rsync
+        - unzip
+        - tar
+        - gzip

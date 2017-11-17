@@ -1,0 +1,10 @@
+---
+
+- name: Get date
+  command: 'date'
+  register: cmd_date
+  changed_when: False
+
+- name: Show date
+  debug:
+    msg: '{{ cmd_date.stdout }}'

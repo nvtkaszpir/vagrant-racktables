@@ -1,0 +1,7 @@
+---
+# Install a role from the Ansible Galaxy
+- src: yatesr.timezone
+- src: geerlingguy.apache
+- src: geerlingguy.php
+- src: geerlingguy.apache-php-fpm
+- src: geerlingguy.mysql

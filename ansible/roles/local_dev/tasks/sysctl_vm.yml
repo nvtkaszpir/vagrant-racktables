@@ -1,0 +1,18 @@
+---
+# super aggressive mode for virtual guests
+# notice this is vagrant, vms are disposable
+# if vm crashses it will probbaly cause disk data corruption
+
+- name: Set systctl parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: 'vm.dirty_background_bytes', value: '0' }
+    - { name: 'vm.dirty_background_ratio', value: '10' }
+    - { name: 'vm.dirty_bytes', value: '0' }
+    - { name: 'vm.dirty_expire_centisecs', value: '6000' }
+    - { name: 'vm.dirty_ratio', value: '30' }
+    - { name: 'vm.dirty_writeback_centisecs', value: '1000' }
+    - { name: 'vm.swappiness', value: '0' }

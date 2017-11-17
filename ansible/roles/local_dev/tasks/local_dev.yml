@@ -1,0 +1,13 @@
+---
+# local development setup
+# like your machine has libvirt, squid ad so on.
+
+# this role should be executed on the Ubuntu guest, but should work on centos aswell.
+
+- include: sysctl_vm.yml
+- include: local_proxy.yml
+- include: system_updates.yml
+- include: system_core_settings.yml
+- include: dev_tools.yml
+- include: info.yml
+

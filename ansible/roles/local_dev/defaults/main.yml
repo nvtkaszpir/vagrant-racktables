@@ -1,0 +1,8 @@
+---
+# you need squid installed and configured on your machine
+# this is default network for libvirt
+use_local_proxy: false
+http_proxy: "http://192.168.121.1:3128/"
+https_proxy: "http://192.168.121.1:3128/"
+
+apt_retries: 5

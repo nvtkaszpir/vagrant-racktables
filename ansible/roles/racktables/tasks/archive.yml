@@ -1,0 +1,9 @@
+---
+
+- name: Unpack archive
+  unarchive:
+    src: '{{ racktables_archive_src }}'
+    dest: '{{ racktables_install_dir }}'
+    remote_src: yes
+    extra_opts: '--strip=1'
+
