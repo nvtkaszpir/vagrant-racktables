@@ -84,3 +84,4 @@
         - unzip
         - tar
         - gzip
+        - snmp-mibs-downloader
