@@ -28,5 +28,5 @@ racktables_archive_version: '0.21.1'
 racktables_archive_src: 'https://github.com/RackTables/racktables/archive/RackTables-{{ racktables_archive_version }}.tar.gz'
 
 racktables_rsync: true
-racktables_rsync_src: './racktables'
+racktables_rsync_src: './racktables/'
 
