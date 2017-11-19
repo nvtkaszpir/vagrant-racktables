@@ -86,3 +86,5 @@
         - gzip
         - snmp
         - snmp-mibs-downloader
+        - iputils-ping
+        - fping
